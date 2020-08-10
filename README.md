@@ -4,8 +4,12 @@
 
 ![C/C++ CI](https://github.com/gotchas/quickie_algos/workflows/C/C++%20CI/badge.svg)
 
-# quickie algos: qalgos
+# Graphun
 
-collection of simple algos implemented in C++20
+Cache friendly graph library. Representation is adjacency list implemented as nested vectors std:vector<std::vector<int>>.
+  
+1. common allocator for both nested and enclosing vaectos
+2. boost::flat_map ?
+3. insertion_sort best performance of sort for almost sorted sequences
 
 
