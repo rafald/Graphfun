@@ -4,7 +4,7 @@
 
 ![C/C++ CI](https://github.com/gotchas/quickie_algos/workflows/C/C++%20CI/badge.svg)
 
-# Graphun
+# Graphfun
 
 Cache friendly graph library. Representation is adjacency list implemented as nested vectors std:vector<std::vector<int>>.
   
