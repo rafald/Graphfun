@@ -62,7 +62,7 @@ namespace algos {
 
       template <class Next_Vertices,class Visitor>
       void
-      xfs_impl(int iv, Visitor visit) const {
+      xfs_preorder_impl(int iv, Visitor visit) const {
          std::vector<bool> discovered(adj_.size(), false);
 
          Next_Vertices backtrack; // queue for bfs, stack for dfs
@@ -74,7 +74,7 @@ namespace algos {
 
             if (not discovered[v]) {
                discovered[v] = true;
-               visit(v);//other option is CRTP                                                            
+               visit(v);
                std::ranges::for_each(adj_[v], [&backtrack](int e) { backtrack.push(e); });  // indeterminism, can push in various orders
                // xfs2: here we can "compress" all neightbours with iterator/variable range - bag.pop_one()
             }
@@ -83,7 +83,7 @@ namespace algos {
       enum { TAKE_FROM_FRONT = true, TAKE_FROM_BACK = false,}; //TODO 3rd option take random
       template <class Next_Vertices, bool Take_From_Front, class Visitor>
       void
-      xfs2_impl(int s, Visitor visit) const {
+      xfs2_preorder_impl(int s, Visitor visit) const {
          std::vector<bool> discovered(adj_.size(), false);
 
          Next_Vertices backtrack; // queue for bfs, std::stack<irange> for dfs
@@ -100,14 +100,13 @@ namespace algos {
                   v = front(backtrack).pop_back();
                if (not discovered[v]) {
                   discovered[v] = true;
-                  visit(v);  //? CRTP
+                  visit(v);  
                   auto& children = adj_[v];
                   backtrack.push({children.data(), children.size()});
                }
             }
          }
       }
-
      public:
       graph_out(int edges) : adj_(edges) {}
       graph_out(std::initializer_list<std::initializer_list<int>> adj) : adj_(adj.begin(), adj.end()) {}
@@ -142,18 +141,19 @@ namespace algos {
 /////////////////////////////////////////////////////////
       template <class Visitor>
       void
-      dfs(int iv, Visitor visit) const { return xfs_impl<std::stack<int> >(iv, visit); }
+      dfs(int iv, Visitor visit) const { return xfs_preorder_impl<std::stack<int> >(iv, visit); }
       
       template <class Visitor>
       void
-      dfs2(int s, Visitor visit) const { return xfs2_impl<std::stack<irange>, TAKE_FROM_FRONT >(s,visit); }
+      dfs2(int s, Visitor visit) const { return xfs2_preorder_impl<std::stack<irange>, TAKE_FROM_FRONT >(s,visit); }
 /////////////////////////////////////////////////////////
       template <class Visitor>
       void
-      bfs(int s, Visitor visit) const { return xfs_impl<std::queue<int> >(s, visit); }
+      bfs(int s, Visitor visit) const { return xfs_preorder_impl<std::queue<int> >(s, visit); }
       template <class Visitor>
       void
-      bfs2(int s, Visitor visit) const { return xfs2_impl<std::queue<irange>, TAKE_FROM_BACK >(s, visit); }
+      bfs2(int s, Visitor visit) const { return xfs2_preorder_impl<std::queue<irange>, TAKE_FROM_BACK >(s, visit); }
    };
 }  // namespace algos
 }  // namespace rld
+
