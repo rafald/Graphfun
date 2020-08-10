@@ -6,7 +6,7 @@
 
 [![download](https://img.shields.io/badge/latest%20version%20%20-download-blue.svg)](https://raw.githubusercontent.com/rafald/Graphfun/)
 
-![C/C++ CI](https://github.com/rafald/quickie_algos/workflows/C/C++%20CI/badge.svg)
+![C/C++ CI](https://github.com/rafald/Graphfun/workflows/C/C++%20CI/badge.svg)
 
 # Graphfun
 
