@@ -13,17 +13,30 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
         
-    - name: Cache Hunter
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Create Build Environment
+      #shell: bash # ON W$ FOR SOME F.REASON using bash in this step causes a failure in configure step
+      run: |
+       python -m pip install --upgrade pip
+       pip3 install wheel setuptools 
+       pip3 install conan
+
+    - name: Cache Conan
       uses: actions/cache@v2
       env:
-        cache-name: cache-hunter-std
+        cache-name: cache-conan-std
       with:
-        path: ~/.hunter/
-        key: ${{ matrix.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/CMakeLists.txt') }}
+        path: ~/.conan/
+        key: ${{ matrix.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/CMakeLists.txt') }} #key: ${{ runner.os }}-
         restore-keys: |
           ${{ matrix.os }}-build-${{ env.cache-name }}-
           ${{ matrix.os }}-build-
           ${{ matrix.os }}-
+
     - name: ninja
       uses: seanmiddleditch/gha-setup-ninja@master
         
@@ -34,7 +47,7 @@ jobs:
          sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100 --slave /usr/bin/g++ g++ /usr/bin/g++-10 --slave /usr/bin/gcov gcov /usr/bin/gcov-10
     - name: configure
       shell: bash
-      run: cmake -Bbuild -H. . -DCMAKE_BUILD_TYPE=$BUILD_TYPE # -DHUNTER_STATUS_DEBUG 
+      run: cmake -Bbuild -H. . -DCMAKE_BUILD_TYPE=$BUILD_TYPE 
 
     - name: build
       shell: bash
